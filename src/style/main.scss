@@ -1,0 +1,33 @@
+.homeTitle{
+	text-align: center;
+	padding:  40px 0 0;
+}
+.calendar{
+	text-align: center;
+	padding: 20px 0;
+	.day, .dayTitle{
+		width: 14%;
+		display: inline-block;
+	}
+	.day{
+		.card {
+			text-align: left;
+			&.outRange {
+				color: grey;
+				background: #f5f4f4;
+				.ant-card-head-title{
+					color: grey;
+				}
+			}
+			.ant-card-body{
+				height: 90px;
+			}
+		}
+	}
+	.dayTitle {
+		padding: 10px;
+		border: 1px solid #e8e8e8;
+		background: #1890ff;
+		color: #fafafa;
+	}
+}

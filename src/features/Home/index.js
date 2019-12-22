@@ -1,4 +1,8 @@
 import React from 'react';
+import Calendar from './Calendar';
+import {Row, Col, Typography} from 'antd';
+
+const { Title } = Typography;
 
 class Home extends React.Component {
 
@@ -7,9 +11,12 @@ class Home extends React.Component {
 	}
 	render() {
 		return (
-			<div>
-				Calendar
-			</div>
+			<Row type="flex" justify="center">
+				<Col span={24} className="homeTitle">
+					<Title> My Calendar</Title>
+				</Col>
+				<Calendar />
+			</Row>
 		);
 	}
 };
