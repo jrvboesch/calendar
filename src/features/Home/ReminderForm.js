@@ -64,7 +64,7 @@ class ReminderForm extends React.Component {
 						})( <Input placeholder="Example: San Pedro Sula"/> )
 					}
 				</Form.Item>
-				<Form.Item label="Color" hasFeedback>
+				<Form.Item label="Color">
 					{
 						getFieldDecorator('color', {
 							initialValue: reminderDay.color ? reminderDay.color : undefined,

@@ -12,3 +12,10 @@ export const getCalendarMatrix = (date) => {
 
 	return days;
 };
+
+export const isReminderInMonth = (date, current) => {
+	let startDay = moment(current).date(1);
+	let endDay = moment(current).date(current.daysInMonth());
+
+	return moment(date).isBetween(startDay, endDay);
+}

@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import {Col, Card, Typography} from 'antd';
-import {getCalendarMatrix} from '../../util';
+import {Row, Col, Card, Typography, Icon, Dropdown, Menu} from 'antd';
+import {getCalendarMatrix, isReminderInMonth} from '../../util';
 import ReminderModal from './ReminderModal';
+import Reminder from './Reminder';
+import _ from 'lodash';
 
 const { Title } = Typography;
 
@@ -27,18 +29,50 @@ class Calendar extends React.Component {
 	
 	close = () => this.setState({show: false, reminderDay: 0});
 
-	addReminder = (day) => this.setState({show: true, reminderDay: {...day, day: moment(this.state.current).date(day.day), label:"hi", city: "sps", color: {"hsl":{"h":4.105263157894738,"s":0.8962264150943399,"l":0.5843137254901961,"a":1},"hex":"#f44336","rgb":{"r":244,"g":67,"b":54,"a":1},"hsv":{"h":4.105263157894738,"s":0.7786885245901639,"v":0.9568627450980393,"a":1},"oldHue":199.09090909090912,"source":"hex"}}});
+	addReminder = (day) => this.setState({show: true, reminderDay: {...day, day: moment(this.state.current).date(day.day)}});
 
 	render() {
+		const {reminders} = this.props;
+		
 		const {monthDays, current, startDay, show, reminderDay} = this.state;
+		
+		const monthReminders = _.cloneDeepWith(reminders).filter((reminder) => isReminderInMonth(reminder.date, current))
+		
 		const calendar = getCalendarMatrix(current).map((day, index) => (
 			<div className="day" key={index}>
 				<Card 
 					title={day.day}
 					className={`card ${day.outRange ? "outRange" : ""}`} 
 					hoverable
-					onClick= {() => !day.outRange && this.addReminder(day)}
+					extra={[
+						<Dropdown 
+							key="plus"
+							overlay={(
+								<Menu>
+									<Menu.Item key="0">
+										<a href="#" onClick= {() => !day.outRange && this.addReminder(day)}>
+											New Reminder <Icon type="down" />
+										</a>
+									</Menu.Item>
+									<Menu.Item key="1">
+										<a href="http://www.taobao.com/">2nd menu item</a>
+									</Menu.Item>
+								</Menu>
+							)} trigger={['click']}
+						>
+							<Icon type="down" />
+						</Dropdown>
+					]}
 				>
+					<Row>
+						{!day.outRange && monthReminders
+								.filter((reminder) => moment(reminder.date).isSame(moment(current).date(day.day), 'day'))
+								.map((reminder, key) => (
+							<Col span={24} key={key}>
+								<Reminder reminder={reminder}/>
+							</Col>
+						))}
+					</Row>
 				</Card>
 			</div>
 		));
@@ -73,7 +107,7 @@ class Calendar extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-
+		reminders: state.calendar.reminders
 	};
 };
 

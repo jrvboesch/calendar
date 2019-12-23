@@ -21,6 +21,8 @@
 			}
 			.ant-card-body{
 				height: 90px;
+				padding: 5px;
+				overflow: hidden;
 			}
 		}
 	}
@@ -30,4 +32,10 @@
 		background: #1890ff;
 		color: #fafafa;
 	}
+}
+.reminder{
+	border: 1px solid black;
+	color: #fafafa;
+	padding: 0 3px;
+	margin-top: 2px;
 }

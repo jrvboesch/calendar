@@ -1,7 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {Modal, Form} from 'antd';
 import moment from 'moment';
 import ReminderForm from './ReminderForm';
+import {AddReminder} from './Actions';
 
 class ReminderModal extends React.Component {
 	constructor(props) {
@@ -9,9 +11,11 @@ class ReminderModal extends React.Component {
 	}
 
 	onOk = () => {
-		const {form} = this.props;
+		const {form, addReminder, close} = this.props;
 		form.validateFields((errors, values) => {
-			console.log(values)
+			if(errors) return;
+			addReminder(values);
+			close();
 		});
 	};
 
@@ -35,4 +39,11 @@ class ReminderModal extends React.Component {
 	}
 }
 
-export default Form.create()(ReminderModal);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		addReminder: (reminder) => dispatch(AddReminder(reminder))
+	};
+};
+
+
+export default connect(null, mapDispatchToProps)(Form.create()(ReminderModal));
