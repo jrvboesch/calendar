@@ -4,9 +4,9 @@
 	"description": "Jobsity code challenge",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "webpack",
-		"start": "webpack-dev-server --mode development --open"
+		"test": "jest",
+		"build": "npm run test && webpack",
+		"start": "npm run test && webpack-dev-server --mode development --open"
 	},
 	"author": "Juan Rodrigo Venegas Boesch",
 	"license": "ISC",
@@ -23,6 +23,7 @@
 		"express": "^4.16.3",
 		"html-loader": "^0.5.5",
 		"html-webpack-plugin": "^3.2.0",
+		"jest": "^24.9.0",
 		"jshint": "^2.9.5",
 		"jshint-loader": "^0.8.4",
 		"mini-css-extract-plugin": "^0.4.1",

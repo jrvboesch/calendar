@@ -15,8 +15,11 @@ export const AddReminder = (reminder) => (dispatch, getState) => {
 	let state = getState();
 	let reminders = state.calendar.reminders;
 	let count = state.calendar.count + 1;
+	let newReminder = {id: count, ...reminder};
+	
+	dispatch(addReminder([...reminders, newReminder]));
 
-	dispatch(addReminder([...reminders, {id: count, ...reminder}]));
+	return newReminder;
 };
 
 const deleteReminder = (id, reminders) => {
