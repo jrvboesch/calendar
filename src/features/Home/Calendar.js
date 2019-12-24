@@ -6,6 +6,7 @@ import {getCalendarMatrix, isReminderInMonth} from '../../util';
 import ReminderModal from './ReminderModal';
 import Reminder from './Reminder';
 import _ from 'lodash';
+import {RemoveAllReminders} from './Actions';
 
 const { Title } = Typography;
 
@@ -18,23 +19,30 @@ class Calendar extends React.Component {
 		this.state = {
 			current,
 			show: false,
-			reminderDay: 0,
-			monthDays: current.daysInMonth(),
-			startDay: current.day()
+			reminderDay: 0
 		}
 		
 	}
 	
+	nextMonth = () => this.setState((prevState) => ({current: moment(prevState.current).add(1, "month")}));
+
+	previewsMonth = () => this.setState((prevState) => ({current: moment(prevState.current).subtract(1, "month")}));
+
 	save = () => this.setState({show: false, reminderDay: 0});
 	
 	close = () => this.setState({show: false, reminderDay: 0});
 
 	addReminder = (day) => this.setState({show: true, reminderDay: {...day, day: moment(this.state.current).date(day.day)}});
 
+	removeReminders = (day) => {
+		const {removeAllReminders} = this.props;
+		removeAllReminders(moment(this.state.current).date(day.day));
+	};
+
 	render() {
 		const {reminders} = this.props;
 		
-		const {monthDays, current, startDay, show, reminderDay} = this.state;
+		const {current, show, reminderDay} = this.state;
 		
 		const monthReminders = _.cloneDeepWith(reminders).filter((reminder) => isReminderInMonth(reminder.date, current))
 		
@@ -45,23 +53,25 @@ class Calendar extends React.Component {
 					className={`card ${day.outRange ? "outRange" : ""}`} 
 					hoverable
 					extra={[
-						<Dropdown 
+						(!day.outRange && <Dropdown 
 							key="plus"
 							overlay={(
 								<Menu>
 									<Menu.Item key="0">
 										<a href="#" onClick= {() => !day.outRange && this.addReminder(day)}>
-											New Reminder <Icon type="down" />
+											New Reminder
 										</a>
 									</Menu.Item>
 									<Menu.Item key="1">
-										<a href="http://www.taobao.com/">2nd menu item</a>
+										<a href="#" onClick= {() => !day.outRange && this.removeReminders(day)}>
+											Clear Reminders
+										</a>
 									</Menu.Item>
 								</Menu>
 							)} trigger={['click']}
 						>
 							<Icon type="down" />
-						</Dropdown>
+						</Dropdown>)
 					]}
 				>
 					<Row>
@@ -80,7 +90,9 @@ class Calendar extends React.Component {
 			<Col span={16} className="calendar">
 				<Col span={24}>
 						<div className="monthTitle">
+							<Icon type="left" className="previewsMonth" onClick={this.previewsMonth}/>
 							<Title level={4}>{current.format("MMMM YYYY")}</Title>
+							<Icon type="right" className="nextMonth" onClick={this.nextMonth}/>
 						</div>
 						<div className="dayTitle">Sunday</div>
 						<div className="dayTitle">Monday</div>
@@ -111,4 +123,10 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps)(Calendar);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		removeAllReminders: (reminder) => dispatch(RemoveAllReminders(reminder))
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar);

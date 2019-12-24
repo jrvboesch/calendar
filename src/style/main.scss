@@ -12,6 +12,7 @@
 	.day{
 		.card {
 			text-align: left;
+			padding: 5px;
 			&.outRange {
 				color: grey;
 				background: #f5f4f4;
@@ -21,8 +22,8 @@
 			}
 			.ant-card-body{
 				height: 90px;
-				padding: 5px;
-				overflow: hidden;
+				padding: 2px 0px;
+				overflow-y: scroll;
 			}
 		}
 	}
@@ -32,10 +33,22 @@
 		background: #1890ff;
 		color: #fafafa;
 	}
+	.monthTitle{
+		.ant-typography {
+			display: inline;
+			padding: 0 30px;
+		}
+		.previewsMonth, .nextMonth {
+			cursor: pointer;
+			&:hover {
+				color: #1890ff;
+			}
+			
+		}
+	}
 }
 .reminder{
-	border: 1px solid black;
-	color: #fafafa;
-	padding: 0 3px;
+	border: 1px solid #e8e8e8;
+	padding: 1px 4px;
 	margin-top: 2px;
 }
