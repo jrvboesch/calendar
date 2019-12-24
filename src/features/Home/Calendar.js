@@ -28,22 +28,38 @@ class Calendar extends React.Component {
 	
 	nextMonth = () => this.setState((prevState) => {
 		const {getWeather, reminders} = this.props;
+		let current = moment(prevState.current).add(1, "month");
 
 		getWeather(_.cloneDeepWith(reminders)
-				.filter((reminder) => isReminderInMonth(reminder.date, prevState.current))
-				.map((reminder) => reminder.id)
+				.filter((reminder) => isReminderInMonth(reminder.date, current))
+				.map((reminder) => Number(reminder.city))
 		);
-
-		return {
-			current: moment(prevState.current).add(1, "month")
-		}
+		return {current}
 	});
 
-	previewsMonth = () => this.setState((prevState) => ({
-		current: moment(prevState.current).subtract(1, "month")
-	}));
+	previewsMonth = () => this.setState((prevState) => {
+		const {getWeather, reminders} = this.props;
+		let current = moment(prevState.current).subtract(1, "month");
 
-	save = () => this.setState({show: false, reminderDay: undefined});
+		getWeather(_.cloneDeepWith(reminders)
+				.filter((reminder) => isReminderInMonth(reminder.date, current))
+				.map((reminder) => Number(reminder.city))
+		);
+		return {current}
+	});
+		
+
+	save = (city) => this.setState((prevState) => {
+		const {getWeather, reminders} = this.props;
+		getWeather([..._.cloneDeepWith(reminders)
+							.filter((reminder) => isReminderInMonth(reminder.date, prevState.current))
+							.map((reminder) => Number(reminder.city)), city]
+		);
+		return {
+			show: false,
+			reminderDay: undefined
+		}
+	});
 	
 	close = () => this.setState({show: false, reminderDay: undefined});
 

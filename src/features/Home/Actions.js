@@ -64,11 +64,13 @@ export const EditReminder = (reminder) => (dispatch, getState) => {
 const getWeather = (weathers) => {
 	return {
 		type: WEATHER,
-		weathers: _.groupBy(weathers.map(({id, weather}) => ({id, weather: weather[0].icon})), "id")
+		weathers: _.groupBy(weathers.map(({id, description, weather}) => ({id, description: weather[0].description, weather: weather[0].icon})), "id")
 	}
 };
 
 export const GetWeather = (reminderIds) => (dispatch) => {
+	if(!reminderIds.length) return;
+
 	return axios.get(`http://api.openweathermap.org/data/2.5/group?id=${reminderIds.toString()}&units=metric&APPID=bcfd29594d7b74f04968a4888c6681da`)
 		.then((response) => {
 			dispatch(getWeather(response.data.list));

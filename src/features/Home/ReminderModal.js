@@ -11,13 +11,13 @@ class ReminderModal extends React.Component {
 	}
 
 	onOk = () => {
-		const {form, addReminder, editReminder, close, reminderDay} = this.props;
+		const {form, addReminder, editReminder, save, reminderDay} = this.props;
 		form.validateFields((errors, values) => {
 			if(errors) return;
 			reminderDay && reminderDay.id 
 				? editReminder({...values, id: reminderDay.id})
 				: addReminder(values);
-			close();
+			save(values.city);
 		});
 	};
 
