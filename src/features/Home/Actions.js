@@ -1,6 +1,8 @@
 import moment from 'moment';
+import axios from 'axios';
+import _ from 'lodash';
 
-import {ADD_REMINDER, DELETE_REMINDER, DELETE_DAY_REMINDERS} from './Actiontypes';
+import {ADD_REMINDER, DELETE_REMINDER, DELETE_DAY_REMINDERS, EDIT_REMINDER, WEATHER} from './Actiontypes';
 
 const addReminder = (reminders) => {
 	return {
@@ -39,10 +41,60 @@ const removeAllReminders = (date, reminders) => {
 };
 
 export const RemoveAllReminders = (date) => (dispatch, getState) => {
-	console.log(date)
 	let state = getState();
 	let reminders = state.calendar.reminders;
 
 	dispatch(removeAllReminders(date, reminders));
 };
+
+const editReminder = (newReminder, reminders) => {
+	return {
+		type: EDIT_REMINDER,
+		reminders: reminders.map((reminder) => reminder.id == newReminder.id ? newReminder : reminder)
+	}
+};
+
+export const EditReminder = (reminder) => (dispatch, getState) => {
+	let state = getState();
+	let reminders = state.calendar.reminders;
+	
+	dispatch(editReminder(reminder, reminders));
+};
+
+const getWeather = (weathers) => {
+	return {
+		type: WEATHER,
+		weathers: _.groupBy(weathers.map(({id, weather}) => ({id, weather: weather[0].icon})), "id")
+	}
+};
+
+export const GetWeather = (reminderIds) => (dispatch) => {
+	return axios.get(`http://api.openweathermap.org/data/2.5/group?id=${reminderIds.toString()}&units=metric&APPID=bcfd29594d7b74f04968a4888c6681da`)
+		.then((response) => {
+			dispatch(getWeather(response.data.list));
+		})
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

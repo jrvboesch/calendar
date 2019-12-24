@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {Modal, Form} from 'antd';
 import moment from 'moment';
 import ReminderForm from './ReminderForm';
-import {AddReminder} from './Actions';
+import {AddReminder, EditReminder} from './Actions';
 
 class ReminderModal extends React.Component {
 	constructor(props) {
@@ -11,20 +11,21 @@ class ReminderModal extends React.Component {
 	}
 
 	onOk = () => {
-		const {form, addReminder, close} = this.props;
+		const {form, addReminder, editReminder, close, reminderDay} = this.props;
 		form.validateFields((errors, values) => {
 			if(errors) return;
-			addReminder(values);
+			reminderDay && reminderDay.id 
+				? editReminder({...values, id: reminderDay.id})
+				: addReminder(values);
 			close();
 		});
 	};
 
 	render() {
 		const {show, save, close, reminderDay, form} = this.props;
-
 		return (
 			<Modal
-				title="New reminder"
+				title={reminderDay && reminderDay.id ? "Edit Reminder" : "New Reminder"}
 				visible={show}
 				onOk={this.onOk}
 				onCancel={close}
@@ -41,7 +42,8 @@ class ReminderModal extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		addReminder: (reminder) => dispatch(AddReminder(reminder))
+		addReminder: (reminder) => dispatch(AddReminder(reminder)),
+		editReminder: (reminder) => dispatch(EditReminder(reminder))
 	};
 };
 

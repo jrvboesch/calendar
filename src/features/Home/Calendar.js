@@ -6,33 +6,50 @@ import {getCalendarMatrix, isReminderInMonth} from '../../util';
 import ReminderModal from './ReminderModal';
 import Reminder from './Reminder';
 import _ from 'lodash';
-import {RemoveAllReminders} from './Actions';
+import {RemoveAllReminders, GetWeather} from './Actions';
 
 const { Title } = Typography;
 
 class Calendar extends React.Component {
 	constructor(props) {
 		super(props);
-		// const current = moment();
-		const current = moment("2019/6/1 03:56:00");
+		const current = moment().date(1);
 
 		this.state = {
 			current,
 			show: false,
-			reminderDay: 0
-		}
-		
+			reminderDay: undefined
+		};
+		props.getWeather(_.cloneDeepWith(props.reminders)
+				.filter((reminder) => isReminderInMonth(reminder.date, current))
+				.map((reminder) => Number(reminder.city))
+		);
 	}
 	
-	nextMonth = () => this.setState((prevState) => ({current: moment(prevState.current).add(1, "month")}));
+	nextMonth = () => this.setState((prevState) => {
+		const {getWeather, reminders} = this.props;
 
-	previewsMonth = () => this.setState((prevState) => ({current: moment(prevState.current).subtract(1, "month")}));
+		getWeather(_.cloneDeepWith(reminders)
+				.filter((reminder) => isReminderInMonth(reminder.date, prevState.current))
+				.map((reminder) => reminder.id)
+		);
 
-	save = () => this.setState({show: false, reminderDay: 0});
+		return {
+			current: moment(prevState.current).add(1, "month")
+		}
+	});
+
+	previewsMonth = () => this.setState((prevState) => ({
+		current: moment(prevState.current).subtract(1, "month")
+	}));
+
+	save = () => this.setState({show: false, reminderDay: undefined});
 	
-	close = () => this.setState({show: false, reminderDay: 0});
+	close = () => this.setState({show: false, reminderDay: undefined});
 
 	addReminder = (day) => this.setState({show: true, reminderDay: {...day, day: moment(this.state.current).date(day.day)}});
+
+	editReminder = (day) => this.setState({show: true, reminderDay: {...day, day: moment(day.date)}});
 
 	removeReminders = (day) => {
 		const {removeAllReminders} = this.props;
@@ -45,7 +62,7 @@ class Calendar extends React.Component {
 		const {current, show, reminderDay} = this.state;
 		
 		const monthReminders = _.cloneDeepWith(reminders).filter((reminder) => isReminderInMonth(reminder.date, current))
-		
+
 		const calendar = getCalendarMatrix(current).map((day, index) => (
 			<div className="day" key={index}>
 				<Card 
@@ -75,19 +92,23 @@ class Calendar extends React.Component {
 					]}
 				>
 					<Row>
-						{!day.outRange && monthReminders
-								.filter((reminder) => moment(reminder.date).isSame(moment(current).date(day.day), 'day'))
-								.map((reminder, key) => (
-							<Col span={24} key={key}>
-								<Reminder reminder={reminder}/>
-							</Col>
-						))}
+						{!day.outRange && _.sortBy(
+								monthReminders.filter((reminder) => moment(reminder.date).isSame(moment(current).date(day.day), 'day')),
+									(reminder) => moment(reminder.date)
+							)
+							.map((reminder, key) => (
+									<Col span={24} key={key}>
+										<Reminder reminder={reminder} editReminder={this.editReminder}/>
+									</Col>
+								)
+							)
+						}
 					</Row>
 				</Card>
 			</div>
 		));
 		return (
-			<Col span={16} className="calendar">
+			<Col span={24} className="calendar">
 				<Col span={24}>
 						<div className="monthTitle">
 							<Icon type="left" className="previewsMonth" onClick={this.previewsMonth}/>
@@ -125,7 +146,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		removeAllReminders: (reminder) => dispatch(RemoveAllReminders(reminder))
+		removeAllReminders: (reminder) => dispatch(RemoveAllReminders(reminder)),
+		getWeather: (reminderIds) => dispatch(GetWeather(reminderIds))
 	};
 };
 

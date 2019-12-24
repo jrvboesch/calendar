@@ -1,7 +1,10 @@
 import React from 'react';
-import {Form, DatePicker, Input} from 'antd';
+import {Form, DatePicker, Input, Select} from 'antd';
 import moment from 'moment';
 import { CirclePicker } from 'react-color';
+import CITIES from '../../json/cities';
+
+const { Option } = Select;
 
 class ReminderForm extends React.Component {
 	constructor(props) {
@@ -12,8 +15,8 @@ class ReminderForm extends React.Component {
 	}
 
 	componentDidMount() {
-		const {reminderDay} = this.props;		
-		this.onChange({color: reminderDay.color ? reminderDay.color.hex : undefined})
+		const {reminderDay} = this.props;	
+		this.onChange(reminderDay.color ? reminderDay.color : undefined)
 		
 	}
 	onChange = (color) => this.setState({color})
@@ -21,7 +24,9 @@ class ReminderForm extends React.Component {
 	render() {
 		const {reminderDay, form} = this.props;
 		const {color} = this.state;
-		 const { getFieldDecorator } = form;
+		const { getFieldDecorator } = form;
+
+		const cityOptions = CITIES.map((city) => (<Option key={city.id}>{city.name}</Option>))
 		return (
 			<Form>
 				<Form.Item label="Label" hasFeedback>
@@ -61,7 +66,19 @@ class ReminderForm extends React.Component {
 								required: true,
 								message: 'Please input a City!',
 							}],
-						})( <Input placeholder="Example: San Pedro Sula"/> )
+						})( 
+							<Select
+								showSearch
+								style={{ width: '100%' }}
+								placeholder="Select a City"
+								optionFilterProp="children"
+								filterOption={(input, option) =>
+									option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+								}
+							>
+								{cityOptions}
+							</Select> 
+						)
 					}
 				</Form.Item>
 				<Form.Item label="Color">
@@ -73,7 +90,7 @@ class ReminderForm extends React.Component {
 								required: true,
 								message: 'Please input a Color!',
 							}],
-						})( <CirclePicker width="100%" color={color}/> )
+						})( <CirclePicker width="100%" color={color ? color.hex : undefined}/> )
 					}
 				</Form.Item>
 			</Form>
