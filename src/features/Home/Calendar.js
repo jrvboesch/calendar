@@ -13,7 +13,7 @@ const { Title } = Typography;
 class Calendar extends React.Component {
 	constructor(props) {
 		super(props);
-		const current = moment().date(1);
+		const current = moment().startOf('month');
 
 		this.state = {
 			current,
@@ -77,8 +77,8 @@ class Calendar extends React.Component {
 		
 		const {current, show, reminderDay} = this.state;
 		
-		const monthReminders = _.cloneDeepWith(reminders).filter((reminder) => isReminderInMonth(reminder.date, current))
-
+		const monthReminders = _.cloneDeepWith(reminders).filter((reminder) => isReminderInMonth(reminder.date, current));
+		
 		const calendar = getCalendarMatrix(current).map((day, index) => (
 			<div className="day" key={index}>
 				<Card 
