@@ -24,6 +24,10 @@
 				height: 90px;
 				padding: 2px 0px;
 				overflow-y: scroll;
+				-ms-overflow-style: none;
+				&::-webkit-scrollbar {
+					display: none;
+				}
 			}
 		}
 	}
