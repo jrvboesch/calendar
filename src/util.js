@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 export const getCalendarMatrix = (date) => {
 
 	let prevMonthDays = moment(date).subtract(1, "month").daysInMonth();
@@ -10,7 +11,8 @@ export const getCalendarMatrix = (date) => {
 		outRange: true
 	})), ...days.map((day) => ({
 		day,
-		outRange: false
+		outRange: false,
+		date: moment(date).date(day)
 	}))];
 
 	let nextMonthDays = 42 - days.length;
@@ -29,4 +31,17 @@ export const isReminderInMonth = (date, current) => {
 	let endDay = moment(current).date(current.daysInMonth());
 
 	return moment(date).isBetween(startDay, endDay, null, '[]');
-}
+};
+
+export const isReminderBetween5Days = (current=moment()) => {
+	let today = moment().startOf('day');
+	let next16Days = moment().add(5, 'days').endOf('day');
+
+	return moment(current).isBetween(today, next16Days, null, '[]');
+};
+
+export const isReminderInThePast = (current=moment()) => {
+	let today = moment().startOf('day');
+
+	return moment(current).isSameOrAfter(today);
+};

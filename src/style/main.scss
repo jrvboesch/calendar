@@ -56,3 +56,11 @@
 	padding: 1px 4px;
 	margin-top: 2px;
 }
+
+.weatherList{
+	height: 60vh;
+	overflow-y: scroll;
+	.ant-statistic-content{
+		font-size: 14px;
+	}
+}
