@@ -64,22 +64,18 @@ export const EditReminder = (reminder) => (dispatch, getState) => {
 	dispatch(editReminder(reminder, reminders));
 };
 
-const getWeather = (weathers) => {
-	return {
-		type: WEATHER,
-		weathers: _.groupBy(weathers.map(({id, description, weather}) => ({id, description: weather[0].description, weather: weather[0].icon})), "id")
-	}
-};
-
-export const GetWeather = (reminderIds) => (dispatch) => {
-	if(!reminderIds.length) return;
-
-	return axios.get(`http://api.openweathermap.org/data/2.5/group?id=${reminderIds.toString()}&units=metric&APPID=bcfd29594d7b74f04968a4888c6681da`)
-		.then((response) => {
-			dispatch(getWeather(response.data.list));
-		})
+export const GetCurrentWeather = (cityId) => (dispatch) => {
+	return axios.get(`http://api.openweathermap.org/data/2.5/weather?id=${cityId.toString()}&units=metric&APPID=bcfd29594d7b74f04968a4888c6681da`)
+		.then((response) => [response.data]);
 }
 
+const getCityWeather = (weathers) => 
+	_.groupBy(weathers.map((weather) => ({...weather, date: moment(weather.dt_txt).format("YYYY-MM-DD")})), "date");
+
+export const GetCityWeather = (cityId, date) => (dispatch) => {
+	return axios.get(`http://api.openweathermap.org/data/2.5/forecast?id=${cityId.toString()}&units=metric&APPID=bcfd29594d7b74f04968a4888c6681da`)
+		.then((response) => getCityWeather(response.data.list)[date]);
+}
 
 
 
