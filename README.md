@@ -42,10 +42,6 @@ __Bonus Features__
 - [x] Properly handle overflow when multiple reminders appear on the same date. 
 - [x] Functionality to delete one or ALL the reminders for a specific day 
 
-__Features To-Do__
-
-- Add the correct weather to each reminder, currently the api just let me get the weather for a list cities but I can't especify the date, at least in the fee tier version of Open Weather.
-
 __To Run__
 
 ```

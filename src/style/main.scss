@@ -55,6 +55,14 @@
 	border: 1px solid #e8e8e8;
 	padding: 1px 4px;
 	margin-top: 2px;
+	.weatherIcon {
+
+		width: 100%;
+		cursor: pointer;
+		&:hover {
+			color: #fafafa;
+		}
+	}
 }
 
 .weatherList{

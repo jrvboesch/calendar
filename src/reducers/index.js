@@ -1,15 +1,15 @@
 import {
-	combineReducers
+  combineReducers
 } from 'redux';
 import {
-	routerReducer
+  routerReducer
 } from 'react-router-redux';
 
 import CalendarReducer from '../features/Home/Reducer';
 
 const rootReducer = combineReducers({
-	routing: routerReducer,
-	calendar: CalendarReducer
+  routing: routerReducer,
+  calendar: CalendarReducer
 });
 
 export default rootReducer;
