@@ -38,7 +38,7 @@
 		"jshint-loader": "^0.8.4",
 		"mini-css-extract-plugin": "^0.4.1",
 		"node-libs-browser": "^2.1.0",
-		"node-sass": "4.9.4",
+		"node-sass": "^4.13.1",
 		"react": "^16.4.1",
 		"react-dom": "^16.4.1",
 		"sass-loader": "^7.0.3",
