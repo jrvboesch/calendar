@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {Provider} from 'react-redux';
 import configureStore from './store/configureStore';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -15,9 +14,9 @@ const App = () => {
   return (
   	<Provider store={store.store}>
   		<PersistGate loading={null} persistor={store.persistor}>
-			<Router history={history} routes={routes} />
-		</PersistGate>
-	</Provider>
+        <Router history={history} routes={routes} />
+      </PersistGate>
+    </Provider>
   );
 };
 export default App;

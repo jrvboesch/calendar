@@ -6,10 +6,10 @@ import PageNotFound from './features/PageNotFound';
 import Home from './features/Home';
 
 export default (
-	<Route>
-		<Route path="/" component={Main}>
-			<IndexRoute component={Home}/>
-		</Route>
-		<Route path="*" component={PageNotFound}/>
-	</Route>
+  <Route>
+    <Route path="/" component={Main}>
+      <IndexRoute component={Home}/>
+    </Route>
+    <Route path="*" component={PageNotFound}/>
+  </Route>
 );
