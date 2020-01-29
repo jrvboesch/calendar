@@ -4,6 +4,7 @@ __Espects__
 
 | Description   | Version|
 | :---:   | :---: |   
+| Node | 10.16.1 |
 | React | ^16.4.1 |
 | Redux     |^4.0.0 |
 | Moment Js     | ^2.24.0 |

@@ -37,10 +37,10 @@ export class WeatherWidget extends React.Component {
                   <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.main} style={{width: 60}}/>
                 }
                 title={weather.main}
-                description={moment.unix(item.dt).format("hh:mm a")}
+                description={moment.unix(item.dt).format("hh:mm A")}
               />
-              <Statistic title="Max" value={(main.temp_min).toFixed(0)} prefix={<Icon type="arrow-up" />} suffix="°C"/>
-              <Statistic title="Min" value={(main.temp_max).toFixed(0)} prefix={<Icon type="arrow-down" />} suffix="°C"/>
+              <Statistic title="Max" value={(main.temp_max).toFixed(0)} prefix={<Icon type="arrow-up" />} suffix="°C"/>
+              <Statistic title="Min" value={(main.temp_min).toFixed(0)} prefix={<Icon type="arrow-down" />} suffix="°C"/>
             </List.Item>
           );
         }}
