@@ -9,6 +9,9 @@
 		"build": "npm run test && webpack",
 		"start": "npm run lint && npm run test && webpack-dev-server --mode development --open"
 	},
+	"engines": {
+		"node": "10.16.1"
+	},
 	"author": "Juan Rodrigo Venegas Boesch",
 	"license": "ISC",
 	"devDependencies": {

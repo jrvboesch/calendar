@@ -2,15 +2,26 @@ import React from 'react';
 import {Form, DatePicker, Input, Select} from 'antd';
 import { CirclePicker } from 'react-color';
 import CITIES from '../../json/cities';
+import _ from 'lodash';
 
 const { Option } = Select;
 
 class ReminderForm extends React.Component {
   constructor(props) {
     super(props);
+
+    const {reminderDay} = props;
+    let cities = CITIES.slice(0, 15);
+
+    if(reminderDay.city)
+      cities.push(_.find(CITIES, {id: Number(reminderDay.city)}));
+
     this.state = {
-      color: undefined
+      color: undefined,
+      cities: _.uniqBy(cities, "id")
     };
+    this.onCitySearch = _.debounce(this.onCitySearch, 300);
+
   }
 
   componentDidMount() {
@@ -18,14 +29,27 @@ class ReminderForm extends React.Component {
     this.onChange(reminderDay.color ? reminderDay.color : undefined);
 		
   }
-	onChange = (color) => this.setState({color})
+	onChange = (color) => this.setState({color});
+
+	onCitySearch = (search) => this.setState(() => {
+	  const {reminderDay} = this.props;
+		
+	  let cities = search.length > 0 
+	    ? CITIES.filter((city) => city.name.toLowerCase().includes(search)).slice(0, 15)
+	    : CITIES.slice(0, 15);
+	  if(reminderDay.city)
+	    cities.push(_.find(CITIES, {id: Number(reminderDay.city)}));
+	  return {
+      		cities: _.uniqBy(cities, "id")
+	  };
+	});
 
 	render() {
 	  const {reminderDay, form} = this.props;
-	  const {color} = this.state;
+	  const {color, cities} = this.state;
 	  const { getFieldDecorator } = form;
 
-	  const cityOptions = CITIES.map((city) => (<Option key={city.id}>{city.name}</Option>));
+	  const cityOptions = cities.map((city) => (<Option key={city.id}>{city.name}</Option>));
 	  return (
 	    <Form>
 	      <Form.Item label="Label" hasFeedback>
@@ -71,6 +95,7 @@ class ReminderForm extends React.Component {
 	              style={{ width: '100%' }}
 	              placeholder="Select a City"
 	              optionFilterProp="children"
+	              onSearch={this.onCitySearch}
 	              filterOption={(input, option) =>
 	                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 	              }
